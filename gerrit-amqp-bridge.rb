@@ -26,33 +26,41 @@ rescue OptionParser::ParseError => e
   $stderr.puts e
 end
 
-abort('-a is not specified.') unless OPTS[:name]
-OPT[:config] = '/etc/gerrit-amqp-bridge.conf' unless OPTS[:config]
+abort('-n is not specified.') unless OPTS[:name]
+OPTS[:config] = '/etc/gerrit-amqp-bridge.conf' unless OPTS[:config]
 
 EM.run do
   Signal.trap("INT") do
     EM.stop
   end
 
-  AMQP.connect(:host => 'localhost') do |amqp_conn|
-    amqp_ch = AMQP::Channel.new(amqp_conn)
-    amqp_ex = amqp_ch.fanout("gerrit.event")
-    amqp_ch.queue("test").bind(amqp_ex)
+  begin
+    AMQP.connect('amqp://localhost:3456',
+                 :on_tcp_connection_failure => Proc.new {EM.stop},
+                 :on_possible_authentication_failure => Proc.new {EM.stop}) do |amqp_conn|
+      amqp_ch = AMQP::Channel.new(amqp_conn)
+      amqp_ex = amqp_ch.fanout("gerrit.event")
+      amqp_ch.queue("test").bind(amqp_ex)
 
-    EM::Ssh.start('localhost', 'testuser', :port => 29418) do |connection|
-      connection.errback do |err|
-        $stderr.puts "#{err} (#{err.class})"
-      end
+      EM::Ssh.start('review.sonyericsson.net', 'nobuhiro.hayashi', :port => 29418) do |connection|
+        connection.errback do |err|
+          $stderr.puts "#{err} (#{err.class})"
+          EM.stop
+        end
 
-      connection.callback do |session|
-        session.exec('gerrit stream-events') do |channel, stream, data|
-          channel.on_data do |ch, data|
-            str = %Q({"host":"localhost","user":"testuser","event":#{data.strip}})
-            amqp_ex.publish(str)
-            $stdout.puts str
+        connection.callback do |session|
+          session.exec('gerrit stream-events') do |channel, stream, data|
+            channel.on_data do |ch, data|
+              str = %Q({"host":"localhost","user":"testuser","event":#{data.strip}})
+              amqp_ex.publish(str)
+              $stdout.puts str
+            end
           end
         end
       end
     end
+  rescue => e
+    $stderr.puts "#{e} (#{e.class})"
+    EM.stop
   end
 end
