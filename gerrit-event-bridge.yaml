@@ -1,0 +1,11 @@
+review:
+  gerrit:
+    url: ssh://nobuhiro.hayashi@review.sonyericsson.net:29418
+    sshkey: /home/nobuhiro/.ssh/gerrit2
+  target:
+    type: amqp
+    url: amqp://localhost
+    exchange:
+      type: topic
+      name: gerrit.event
+      routingkey: gerrit.event.localhost

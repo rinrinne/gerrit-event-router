@@ -6,12 +6,14 @@ require 'em-ssh'
 require 'amqp'
 require 'optparse'
 require 'yaml'
+require 'uri'
 
-DEFALT_CONFIG = '/etc/gerrit-event-bridge.conf'
+DEFAULT_CONFIG = '/etc/gerrit-event-bridge.conf'
 
 Version = '1.0'
 OPTS = {}
-CONF = nil
+
+conf = nil
 
 begin
   OptionParser.new do |opt|
@@ -30,16 +32,20 @@ rescue OptionParser::ParseError => e
   $stderr.puts e
 end
 
-abort('-n is not specified.') unless OPTS[:name]
-OPTS[:config] = DEFAULT_CONFIG unless OPTS[:config]
+abort('-n is not specified.') unless OPTS.has_key?(:name)
+OPTS[:config] = DEFAULT_CONFIG unless OPTS.has_key?(:config)
 
 begin
-  open(OPTS[:config]) do |conf|
-    CONF = YAML.load(conf)
+  open(OPTS[:config]) do |file|
+    conf = YAML.load(file)[OPTS[:name]]
   end
+  raise "#{OPTS[:name]} is not found in config" unless conf
 rescue => e
   $stderr.puts e
+  exit 1
 end
+ 
+gerrit = URI.parse(conf["gerrit"]["url"])
 
 EM.run do
   Signal.trap("INT") do
@@ -47,23 +53,22 @@ EM.run do
   end
 
   begin
-    EM::Ssh.start('review.sonyericsson.net', 'nobuhiro.hayashi', :port => 29418) do |connection|
+    EM::Ssh.start(gerrit.host, gerrit.user, :port => gerrit.port) do |connection|
       connection.errback do |err|
         $stderr.puts "#{err} (#{err.class})"
         EM.stop
       end
 
       connection.callback do |session|
-        AMQP.connect('amqp://localhost',
-                     :on_tcp_connection_failure => Proc.new {EM.stop},
-                     :on_possible_authentication_failure => Proc.new {EM.stop}) do |amqp_conn|
+        AMQP.connect(conf["target"]["url"],
+                     :on_tcp_connection_failure => Proc.new {$stderr.puts "[AMQP] connection failure"; EM.stop},
+                     :on_possible_authentication_failure => Proc.new {$stderr.puts "[AMQP] authentication failure"; EM.stop}) do |amqp_conn|
           amqp_ch = AMQP::Channel.new(amqp_conn)
-          amqp_ex = amqp_ch.fanout("gerrit.event")
-          amqp_ch.queue("test").bind(amqp_ex)
+          amqp_ex = amqp_ch.fanout(conf["target"]["exchange"]["name"])
 
           session.exec('gerrit stream-events') do |channel, stream, data|
             channel.on_data do |ch, data|
-              str = %Q({"host":"localhost","user":"testuser","event":#{data.strip}})
+              str = %Q({"host":"#{gerrit.host}","user":"#{gerrit.user}","event":#{data.strip}})
               amqp_ex.publish(str)
               $stdout.puts str
             end
@@ -74,6 +79,7 @@ EM.run do
     end
   rescue => e
     $stderr.puts "#{e} (#{e.class})"
+    $stderr.puts e.backtrace.join("\n")
     EM.stop
   end
 end
