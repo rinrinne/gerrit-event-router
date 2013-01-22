@@ -5,9 +5,13 @@ require 'eventmachine'
 require 'em-ssh'
 require 'amqp'
 require 'optparse'
+require 'yaml'
+
+DEFALT_CONFIG = '/etc/gerrit-event-bridge.conf'
 
 Version = '1.0'
 OPTS = {}
+CONF = nil
 
 begin
   OptionParser.new do |opt|
@@ -27,7 +31,15 @@ rescue OptionParser::ParseError => e
 end
 
 abort('-n is not specified.') unless OPTS[:name]
-OPTS[:config] = '/etc/gerrit-amqp-bridge.conf' unless OPTS[:config]
+OPTS[:config] = DEFAULT_CONFIG unless OPTS[:config]
+
+begin
+  open(OPTS[:config]) do |conf|
+    CONF = YAML.load(conf)
+  end
+rescue => e
+  $stderr.puts e
+end
 
 EM.run do
   Signal.trap("INT") do
@@ -35,20 +47,20 @@ EM.run do
   end
 
   begin
-    AMQP.connect('amqp://localhost:3456',
-                 :on_tcp_connection_failure => Proc.new {EM.stop},
-                 :on_possible_authentication_failure => Proc.new {EM.stop}) do |amqp_conn|
-      amqp_ch = AMQP::Channel.new(amqp_conn)
-      amqp_ex = amqp_ch.fanout("gerrit.event")
-      amqp_ch.queue("test").bind(amqp_ex)
+    EM::Ssh.start('review.sonyericsson.net', 'nobuhiro.hayashi', :port => 29418) do |connection|
+      connection.errback do |err|
+        $stderr.puts "#{err} (#{err.class})"
+        EM.stop
+      end
 
-      EM::Ssh.start('review.sonyericsson.net', 'nobuhiro.hayashi', :port => 29418) do |connection|
-        connection.errback do |err|
-          $stderr.puts "#{err} (#{err.class})"
-          EM.stop
-        end
+      connection.callback do |session|
+        AMQP.connect('amqp://localhost',
+                     :on_tcp_connection_failure => Proc.new {EM.stop},
+                     :on_possible_authentication_failure => Proc.new {EM.stop}) do |amqp_conn|
+          amqp_ch = AMQP::Channel.new(amqp_conn)
+          amqp_ex = amqp_ch.fanout("gerrit.event")
+          amqp_ch.queue("test").bind(amqp_ex)
 
-        connection.callback do |session|
           session.exec('gerrit stream-events') do |channel, stream, data|
             channel.on_data do |ch, data|
               str = %Q({"host":"localhost","user":"testuser","event":#{data.strip}})
@@ -56,6 +68,7 @@ EM.run do
               $stdout.puts str
             end
           end
+
         end
       end
     end

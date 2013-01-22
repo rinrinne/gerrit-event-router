@@ -1,4 +1,4 @@
-gerrit-amqp-bridge
+gerrit-event-bridge
 ==================
 
 Sample code:
