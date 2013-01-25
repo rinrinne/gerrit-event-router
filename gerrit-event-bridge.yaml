@@ -1,0 +1,12 @@
+-
+  name: default
+  gerrit:
+    uri: ssh://nobuhiro.hayashi@review.sonyericsson.net:29418
+    keyfile: /home/nobuhiro/.ssh/gerrit'
+
+  broker:
+    uri: amqp://localhost
+    exchange:
+      type: topic
+      name: gerrit.event
+    routingkey: gerrit.event.localhost

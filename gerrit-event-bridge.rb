@@ -17,6 +17,7 @@ conf = nil
 
 $logger = ::Logger.new(STDOUT)
 $logger.level = ::Logger::DEBUG
+$logger.progname = 'GMB'
 
 begin
   OptionParser.new do |opt|
@@ -34,7 +35,7 @@ begin
     raise "No bridge configuration in #{OPTS[:config]}" unless conf.has_key?("bridge")
   end
 rescue => e
-  $stderr.puts e
+  $logger.error { e.message }
   exit 1
 end
  
@@ -45,11 +46,11 @@ EM.run do
   end
 
   begin
-    $logger.info("begin")
+    $logger.info { "begin" }
     gerrit = URI.parse(conf["gerrit"]["url"])
     EM::Ssh.start(gerrit.host, gerrit.user, :port => gerrit.port) do |connection|
       connection.errback do |err|
-        $logger.warn("#{err} (#{err.class})")
+        $logger.warn { "#{err} (#{err.class})" }
         EM.stop
       end
 
@@ -64,7 +65,7 @@ EM.run do
             channel.on_data do |ch, data|
               str = %Q({"host":"#{gerrit.host}","user":"#{gerrit.user}","event":#{data.strip}})
               amqp_ex.publish(str)
-              $logger.debug(str)
+              $logger.debug { str }
             end
           end
 
@@ -72,8 +73,8 @@ EM.run do
       end
     end
   rescue => e
-    $stderr.puts "#{e} (#{e.class})"
-    $stderr.puts e.backtrace.join("\n")
+    $logger.error { "#{e} (#{e.class})" }
+    $logger.debug { e.backtrace.join("\n") }
     EM.stop
   end
 end
