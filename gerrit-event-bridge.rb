@@ -17,7 +17,7 @@ conf = nil
 
 $logger = ::Logger.new(STDOUT)
 $logger.level = ::Logger::DEBUG
-$logger.progname = 'GMB'
+$logger.progname = 'GEB'
 
 begin
   OptionParser.new do |opt|

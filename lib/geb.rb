@@ -1,11 +1,11 @@
 $:.unshift File.dirname(File.expand_path(__FILE__))
 
 require 'logger'
-#require 'gmb/server'
-require 'gmb/config'
+#require 'geb/server'
+require 'geb/config'
 
 module GerritEventBridge
-  NAME = 'GMB'
+  NAME = 'GEB'
 
   class << self
     attr_writer :logger
@@ -15,4 +15,4 @@ module GerritEventBridge
   end
 end
 
-GMB = GerritEventBridge
+GEB = GerritEventBridge

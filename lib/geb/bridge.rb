@@ -8,7 +8,7 @@ module GerritEventBridge
         EM.run do
           EM::Ssh.start(gerrit.host, gerrit.user, :port => gerrit.port) do |connection|
             connection.errback do |err|
-              GMB.logger.warn { "#{err} (#{err.class})" }
+              GEB.logger.warn { "#{err} (#{err.class})" }
               EM.stop
             end
 
