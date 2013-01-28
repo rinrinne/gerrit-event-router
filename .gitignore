@@ -17,3 +17,6 @@ vendor/bundle
 .yardoc
 _yardoc
 doc/
+
+test.rb
+test.yaml

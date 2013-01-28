@@ -1,8 +1,8 @@
 $:.unshift File.dirname(File.expand_path(__FILE__))
 
 require 'logger'
-#require 'geb/server'
 require 'geb/config'
+require 'geb/bridge'
 
 module GerritEventBridge
   NAME = 'GEB'
