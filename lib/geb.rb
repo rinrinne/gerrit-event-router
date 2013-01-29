@@ -13,7 +13,7 @@ module GerritEventBridge
 
   class << self
     attr_writer :logger
-    def logger(level = ::Logger::WARN)
+    def logger(level = ::Logger::INFO)
       @logger ||= ::Logger.new(STDOUT).tap {|l| l.level = level }
     end
   end
