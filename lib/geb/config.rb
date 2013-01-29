@@ -30,7 +30,7 @@ module GerritEventBridge
 
     def Config.load(path)
       conf = new()
-      open(path) do |stream|
+      open(path || GEB.DEFAULT_CONFIG) do |stream|
         YAML.load_stream(stream, path) do |obj|
           if obj.instance_of?(Gerrit)
             conf.gerrits << obj
