@@ -28,37 +28,6 @@ module GerritEventBridge
       attr_reader :name, :uri
     end
 
-    class Gerrit < Base
-      DEFAULT_PORT = 29418
-      COMMAND = 'gerrit stream-events'
-
-      def initialize(name, uri, keyfile, broker, routingkey)
-        super(name, uri)
-        @keyfile = keyfile
-        @broker = broker
-        @routingkey = routingkey
-      end
-
-      def default_port
-        DEFAULT_PORT
-      end
-
-      def command
-        COMMAND
-      end
-
-      attr_reader :keyfile, :broker, :routingkey
-    end
-
-    class Broker < Base
-      def initialize(name, uri, exchange)
-        super(name, uri)
-        @exchange = exchange
-      end
-
-      attr_reader :exchange
-    end
-
     def Config.load(path)
       conf = new()
       open(path) do |stream|
