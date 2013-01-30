@@ -5,8 +5,10 @@ require 'yaml'
 require 'uri'
 require 'geb/constants'
 require 'geb/config'
+require 'geb/config/generic'
 require 'geb/config/gerrit'
 require 'geb/config/broker'
+require 'geb/config/broker/amqp'
 require 'geb/bridge'
 
 module GerritEventBridge

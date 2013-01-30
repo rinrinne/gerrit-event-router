@@ -1,7 +1,7 @@
---- !ruby/object:GEB::Config::Broker
+--- !ruby/object:GEB::Config::Broker::AMQP
 name: amqp-jenkins
 uri: amqp://localhost
-#user: gerrituser
+user: 
 exchange:
   type: topic
   name: gerrit.event

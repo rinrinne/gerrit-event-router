@@ -1,5 +1,5 @@
 module GerritEventBridge
-  class Config
+  module Config
     class Gerrit < Base
       DEFAULT_PORT = 29418
       COMMAND = 'gerrit stream-events'
