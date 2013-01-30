@@ -1,6 +1,7 @@
 --- !ruby/object:GEB::Config::Broker
 name: amqp-jenkins
 uri: amqp://localhost
+#user: gerrituser
 exchange:
   type: topic
   name: gerrit.event
@@ -8,6 +9,6 @@ exchange:
 --- !ruby/object:GEB::Config::Gerrit
 name: hoge
 uri: ssh://nobuhiro.hayashi@review.sonyericsson.net:29418
-keyfile: /home/nobuhiro/.ssh/gerrit'
+ssh_key: /home/nobuhiro/.ssh/gerrit'
 broker: amqp-jenkins
-routingkey: gerrit.event.localhost
+routing_key: gerrit.event.localhost

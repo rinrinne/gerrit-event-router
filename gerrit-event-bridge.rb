@@ -17,7 +17,7 @@ GEB.logger(GEB::LOG_NORMAL).progname = GEB::NAME
 begin
   OPTS = {}
   OptionParser.new do |opt|
-    opt.on('d', '--debug', "Debug mode") do
+    opt.on('-d', '--debug', "Debug mode") do
       OPTS[:debug] = true
     end
     opt.on('-c CONFIGFILE', '--config', 'Path to config file') do |v|

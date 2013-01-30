@@ -8,7 +8,7 @@ module GerritEventBridge
         @broker = config.brokers[@gerrit.broker]
         raise "Broker name is not found: #{@gerrit.broker}" unless @broker
 
-        GEB.logger.info "Configured bridge: gerrit(#{@gerrit.name}) -> broker(#{@broker.name})"
+        GEB.logger.info "Configured bridge: #{GEB::GERRIT_HEADER}(#{@gerrit.name}) -> broker#{GEB::AMQP_HEADER}(#{@broker.name})"
         @configured = true
       rescue
         @configured = false
@@ -21,8 +21,10 @@ module GerritEventBridge
 
       Signal.trap(:INT) do
         GEB.logger.debug "Receive signal: INT"
-        GEB.logger.info "Terminated by INT"
-        EM.stop
+        EM.add_timer(1) do
+          GEB.logger.info "Terminated by INT"
+          EM.stop
+        end
       end
 
       Signal.trap(:USR2) do
@@ -38,37 +40,41 @@ module GerritEventBridge
         uri = URI.parse(@gerrit.uri)
         uri.port = @gerrit.default_port unless uri.port
 
-        fail_conn = Proc.new { GEB.logger.warn "[AMQP] connection failure" }
-        fail_auth = Proc.new { GEB.logger.warn "[AMQP] authentication failure" }
+        amqp_connection_options = {
+          :on_tcp_connection_failure =>
+            Proc.new { GEB.logger.warn "#{GEB::AMQP_HEADER} connection failure" },
+          :on_possible_authentication_failure =>
+            Proc.new { GEB.logger.warn "#{GEB::AMQP_HEADER} authentication failure" }
+        }
+
+        exchange_headers = {
+          :routing_key => @gerrit.routing_key,
+          :content_type => 'application/json',
+          :user_id => @broker.user,
+          :app_id => GEB::NAME
+        }
 
         EM.run do
           EM::Ssh.start(uri.host, uri.user, :port => uri.port) do |connection|
             connection.errback do |err|
-              GEB.logger.error { "#{err} (#{err.class})" }
+              GEB.logger.error { "#{GEB::GERRIT_HEADER} #{err} (#{err.class})" }
               EM.stop
             end
 
             connection.callback do |session|
-              GEB.logger.info("Start gerrit connection, process #{$$}")
-              AMQP.connect(@broker.uri,
-                           :on_tcp_connection_failure => fail_conn,
-                           :on_possible_authentication_failure => fail_auth) do |amqp_conn, open_ok|
-                AMQP::Channel.new(amqp_conn, AMQP::Channel.next_channel_id, :auto_recovery => true) do |amqp_ch, open_ok|
-                  ex_type = @broker.exchange['type']
-                  ex_name = @broker.exchange['name']
-                  amqp_ex = case ex_type 
-                            when "direct"
-                              amqp_ch.direct(ex_name)
-                            when "fanout"
-                              amqp_ch.fanout(ex_name)
-                            when "topic"
-                              amqp_ch.topic(ex_name)
-                            end
-                  session.exec(@gerrit.command) do |channel, stream, data|
-                    channel.on_data do |ch, data|
-                      str = %Q({"host":"#{uri.host}","user":"#{uri.user}","event":#{data.strip}})
-                      amqp_ex.publish(str, :routing_key => @gerrit.routingkey)
-                      GEB.logger.debug { str }
+              GEB.logger.info("#{GEB::GERRIT_HEADER} connection established.")
+              AMQP.connect(@broker.uri, amqp_connection_options) do |client, open_ok|
+                AMQP::Channel.new(client, AMQP::Channel.next_channel_id, :auto_recovery => true) do |amqp_ch, open_ok|
+                  AMQP::Exchange.new(amqp_ch, @broker.exchange['type'].to_sym, @broker.exchange['name']) do |exchange|
+                    session.exec(@gerrit.command) do |channel, stream, data|
+                      channel.on_data do |ch, data|
+                        exchange_headers[:timestamp] = Time.now.to_i
+                        str = %Q({"version":"#{GEB::EVENT_SCHEMA_VERSION}","host":"#{uri.host}","user":"#{uri.user}","event":#{data.strip}})
+                        exchange.publish(str, exchange_headers) do
+                          GEB.logger.debug "#{GEB::AMQP_HEADER} Published time: #{exchange_headers[:timestamp]}"
+                          GEB.logger.debug "#{GEB::AMQP_HEADER} Published content: #{str}"
+                        end
+                      end
                     end
                   end
                 end
