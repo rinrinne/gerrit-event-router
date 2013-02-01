@@ -1,4 +1,4 @@
---- !ruby/object:GEB::Config::Broker::AMQP
+--- !ruby/object:GEB::Broker::AMQP::Config
 name: amqp-jenkins
 uri: amqp://localhost
 user: 
@@ -6,7 +6,7 @@ exchange:
   type: topic
   name: gerrit.event
 
---- !ruby/object:GEB::Config::Gerrit
+--- !ruby/object:GEB::Gerrit::Config
 name: hoge
 uri: ssh://nobuhiro.hayashi@review.sonyericsson.net:29418
 ssh_key: /home/nobuhiro/.ssh/gerrit'

@@ -5,11 +5,10 @@ require 'yaml'
 require 'uri'
 require 'geb/constants'
 require 'geb/config'
-require 'geb/config/generic'
-require 'geb/config/gerrit'
-require 'geb/config/broker'
-require 'geb/config/broker/amqp'
 require 'geb/bridge'
+require 'geb/gerrit'
+require 'geb/broker'
+require 'geb/broker/amqp'
 
 module GerritEventBridge
   class << self
@@ -19,7 +18,7 @@ module GerritEventBridge
     end
 
     def load_config(path)
-      Config.load(path)
+      Config.new.load(path)
     end
 
     def start(name, config)
