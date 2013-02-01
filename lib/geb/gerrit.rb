@@ -1,6 +1,7 @@
 module GerritEventBridge
-  module Config
-    class Gerrit < Base
+  class Gerrit
+
+    class Config < GerritEventBridge::Config::Base
       DEFAULT_PORT = 29418
       COMMAND = 'gerrit stream-events'
 
@@ -21,6 +22,9 @@ module GerritEventBridge
 
       attr_reader :ssh_key, :broker, :routing_key
     end
+
+    def initialize(gerrit)
+      @gerrit = gerrit
+    end
   end
 end
-

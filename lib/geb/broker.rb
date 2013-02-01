@@ -9,6 +9,14 @@ module GerritEventBridge
       end
     end
 
+    module Config
+      class Base < GerritEventBridge::Config::Base
+        def initialize(name, uri)
+          super(name, uri)
+        end
+      end
+    end
+
     class << self
       def load(broker)
         if broker.instance_of?(GEB::Config::Broker::AMQP) then
