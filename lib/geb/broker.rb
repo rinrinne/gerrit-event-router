@@ -7,6 +7,7 @@ module GerritEventBridge
 
       def send(data)
       end
+
     end
 
     module Config
@@ -18,9 +19,9 @@ module GerritEventBridge
     end
 
     class << self
-      def load(broker)
-        if broker.instance_of?(GEB::Config::Broker::AMQP) then
-          GEB::Broker::AMQP.new(broker)
+      def connect(broker, &block)
+        if broker.instance_of?(GEB::Broker::AMQP::Config) then
+          GEB::Broker::AMQP.new(broker).connect(&block)
         end
       end
     end
