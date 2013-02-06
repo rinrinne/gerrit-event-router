@@ -8,7 +8,7 @@ module GerritEventBridge
         @broker = config.brokers[@gerrit.broker]
         raise "Broker name is not found: #{@gerrit.broker}" unless @broker
 
-        GEB.logger.info "Configured bridge: #{GEB::GERRIT_HEADER}(#{@gerrit.name}) -> broker#{GEB::AMQP_HEADER}(#{@broker.name})"
+        GEB.logger.info "Configured bridge: #{@gerrit.header}(#{@gerrit.name}) -> broker#{@broker.header}(#{@broker.name})"
         @configured = true
       rescue
         @configured = false
@@ -40,20 +40,21 @@ module GerritEventBridge
         EM.run do
           EM::Ssh.start(uri.host, uri.user, :port => uri.port) do |connection|
             connection.errback do |err|
-              GEB.logger.error { "#{GEB::GERRIT_HEADER} #{err} (#{err.class})" }
+              GEB.logger.error { "#{@gerrit.header} #{err} (#{err.class})" }
               EM.stop
             end
 
             connection.callback do |session|
-              GEB.logger.info("#{GEB::GERRIT_HEADER} connection established.")
+              GEB.logger.info("#{@gerrit.header} connection established.")
 
               GEB::Broker.connect(@broker) do |broker|
-                GEB.logger.info("#{GEB::AMQP_HEADER} connection established.")
+                GEB.logger.info("#{@broker.header} connection established.")
+                GEB.logger.debug("#{@broker.header} channel id = #{broker.channel.id}")
 
                 session.exec(@gerrit.command) do |channel, stream, data|
                   channel.on_data do |ch, data|
-                    str = %Q({"version":"#{GEB::EVENT_SCHEMA_VERSION}","host":"#{uri.host}","user":"#{uri.user}","event":#{data.strip}})
-                    broker.send(str, :routing_key => @gerrit.routing_key, :timestamp => Time.now.to_i)
+                    str = %Q({"version":"#{GEB::SCHEMA_VERSION}","host":"#{uri.host}","user":"#{uri.user}","event":#{data.strip}})
+                    broker.send(str, :routing_key => @gerrit.routing_key)
                   end
                 end
               end

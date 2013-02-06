@@ -1,12 +1,17 @@
 module GerritEventBridge
   module Broker
     class AMQP < Base
+      HEADER = '[Broker::AMQP]'
 
       class Config < GerritEventBridge::Broker::Config::Base
         def initialize(name, uri, user, exchange)
           super(name, uri)
           @user = user
           @exchange = exchange
+        end
+
+        def header
+          AMQP::HEADER
         end
 
         attr_reader :user, :exchange
@@ -19,24 +24,20 @@ module GerritEventBridge
           :user_id => @broker.user,
           :app_id => GEB::NAME
         }
+        @connection = nil
+        @exchange = nil
       end
 
       def connect(&block)
         begin
           @connection = ::AMQP.connect(@broker.uri) do |connection|
-            @channel = ::AMQP::Channel.new(connection, ::AMQP::Channel.next_channel_id)
-            @channel.auto_recovery = true
-            @channel.on_error do |ch, channel_close|
-              raise channel_close.reply_text
-            end
-
-            @exchange = ::AMQP::Exchange.new(@channel, @broker.exchange['type'].to_sym, @broker.exchange['name'])
-
+            generate_channel(connection)
             block.call self if block
           end
 
           @connection.on_tcp_connection_loss(&method(:conn_loss))
           @connection.on_connection_interruption(&method(:conn_intp))
+          @connection.on_recovery(&method(:generate_channel))
 
           self
         rescue ::AMQP::PossibleAuthenticationFailureError => afe
@@ -47,37 +48,59 @@ module GerritEventBridge
       end
 
       def send(data, param)
+        param[:timestamp] = Time.now.to_i
         @exchange.publish(data, @headers.merge(param)) do
-          GEB.logger.debug "#{GEB::AMQP_HEADER} Published time: #{param[:timestamp]}"
-          GEB.logger.debug "#{GEB::AMQP_HEADER} Published content: #{data}"
+          GEB.logger.debug "#{HEADER} Published time: #{param[:timestamp]}"
+          GEB.logger.debug "#{HEADER} Published content: #{data}"
         end
       end
 
+      def channel
+        if @exchange then
+          @exchange.channel
+        else
+          nil
+        end
+      end
+
+      def generate_channel(connection = nil)
+        conn = connection || @connection
+        channel = ::AMQP::Channel.new(conn, ::AMQP::Channel.next_channel_id)
+        channel.auto_recovery = true
+        channel.on_error do |ch, channel_close|
+          raise channel_close.reply_text
+        end
+
+        @exchange = ::AMQP::Exchange.new(channel,
+                                         @broker.exchange['type'].to_sym,
+                                         @broker.exchange['name'])
+      end
+
       def conn_failure(err)
-        GEB.logger.error "#{GEB::AMQP_HEADER} TCP connection failed, as expcted."
+        GEB.logger.error "#{HEADER} TCP connection failed, as expcted."
         EM.stop if EM.reactor_running?
       end
 
       def auth_failure(err)
-        GEB.logger.error "#{GEB::AMQP_HEADER} Authentication failed, as expcted, caught #{afe.inspect}"
+        GEB.logger.error "#{HEADER} Authentication failed, as expcted, caught #{afe.inspect}"
         EM.stop if EM.reactor_running?
       end
 
       def conn_loss(connection, settings)
         if connection.error? then
-          GEB.logger.warn "#{GEB::AMQP_HEADER} Connection lost. reconnectiong..."
+          GEB.logger.warn "#{HEADER} Connection lost. reconnectiong..."
           connection.reconnect(false, 1)
         end
       end
 
       def conn_intp(connection)
         if connection.error? then
-          GEB.logger.warn "#{GEB::AMQP_HEADER} Connection interrupton. reconnectiong..."
+          GEB.logger.warn "#{HEADER} Connection interrupton. reconnectiong..."
           connection.reconnect(false, 1)
         end
       end
 
-      attr_reader :connection, :channel, :exchange
+      attr_reader :connection, :exchange
     end
   end
 end

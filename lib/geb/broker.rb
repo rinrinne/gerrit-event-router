@@ -1,11 +1,16 @@
 module GerritEventBridge
   module Broker
     class Base
+      HEADER = '[Broker::Base]'
       def initialize(broker)
         @broker = broker
       end
 
       def send(data)
+      end
+
+      def header
+        HEADER
       end
 
     end
