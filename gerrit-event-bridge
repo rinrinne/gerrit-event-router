@@ -12,6 +12,7 @@ require 'geb'
 
 Version = '1.0'
 GEB.logger(GEB::LOG_NORMAL).progname = GEB::NAME
+STDOUT.sync = true
 
 begin
   OPTS = {}
