@@ -3,9 +3,6 @@ $:.unshift File.join(File.dirname(File.expand_path(__FILE__)), "lib")
 
 require 'rubygems'
 require 'optparse'
-require 'yaml'
-require 'uri'
-require 'logger'
 require 'eventmachine'
 require 'em-ssh'
 require 'amqp'
