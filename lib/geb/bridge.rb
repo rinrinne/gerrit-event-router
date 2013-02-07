@@ -25,6 +25,11 @@ module GerritEventBridge
         EM.stop
       end
 
+      Signal.trap(:TERM) do
+        GEB.logger.info "Receive signal: TERM. terminating."
+        EM.stop
+      end
+
       Signal.trap(:USR2) do
         GEB.logger.debug "Receive signal: USR2"
         if GEB.logger.level == GEB::LOG_NORMAL then
