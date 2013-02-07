@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module GerritEventBridge
   NAME = 'GEB'
   DEFAULT_CONFIG = '/etc/gerrit-event-bridge.conf'

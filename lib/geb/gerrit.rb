@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module GerritEventBridge
   class Gerrit
     HEADER = '[gerrit]'

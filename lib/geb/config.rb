@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module GerritEventBridge
   class Config
     class Array < ::Array

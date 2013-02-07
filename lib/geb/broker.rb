@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module GerritEventBridge
   module Broker
     class Base
