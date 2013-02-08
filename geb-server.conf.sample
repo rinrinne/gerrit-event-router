@@ -7,8 +7,8 @@ exchange:
   name: gerrit.event
 
 --- !ruby/object:GEB::Gerrit::Config
-name: hoge
-uri: ssh://nobuhiro.hayashi@review.sonyericsson.net:29418
-ssh_key: /home/nobuhiro/.ssh/gerrit'
+name: gerrit
+uri: ssh://user@localhost:29418
+ssh_key: /home/user/.ssh/gerrit'
 broker: amqp-jenkins
 routing_key: gerrit.event.localhost
