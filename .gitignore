@@ -22,3 +22,5 @@ test.rb
 test.yaml
 wiki/
 bin/
+*.conf
+*.god
