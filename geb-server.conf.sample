@@ -9,6 +9,8 @@ exchange:
 --- !ruby/object:GEB::Gerrit::Config
 name: gerrit
 uri: ssh://user@localhost:29418
-ssh_key: /home/user/.ssh/gerrit'
+ssh_keys: 
+  - /home/user/.ssh/id_dsa
+  - /home/user/.ssh/id_rsa
 broker: amqp-jenkins
 routing_key: gerrit.event.localhost

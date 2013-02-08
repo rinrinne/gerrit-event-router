@@ -7,9 +7,13 @@ module GerritEventBridge
       DEFAULT_PORT = 29418
       COMMAND = 'gerrit stream-events'
 
-      def initialize(name, uri, ssh_key, broker, routing_key)
+      def initialize(name, uri, ssh_keys, broker, routing_key)
         super(name, uri)
-        @ssh_key = ssh_key
+        if ssh_keys.kind_of? Array then
+          @ssh_keys = ssh_keys
+        elsif ssh_keys.kind_of? String then
+          @ssh_keys= [ ssh_keys ]
+        end
         @broker = broker
         @routing_key = routing_key
       end
@@ -26,7 +30,7 @@ module GerritEventBridge
         Gerrit::HEADER
       end
 
-      attr_reader :ssh_key, :broker, :routing_key
+      attr_reader :ssh_keys, :broker, :routing_key
     end
 
     def initialize(gerrit)

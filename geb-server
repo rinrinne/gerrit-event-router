@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
-$:.unshift File.join(File.dirname(File.expand_path(__FILE__)), "lib")
+rootdir = File.dirname(File.expand_path(__FILE__))
+$:.unshift File.join(rootdir,"lib")
 
 require 'rubygems'
 require 'optparse'
@@ -31,7 +32,7 @@ begin
 
   GEB.logger.level = GEB::LOG_DEBUG if OPTS[:debug]
 
-  conf = GEB.load_config(OPTS[:config])
+  conf = GEB.load_config(OPTS[:config]||"#{rootdir}/#{GEB::CONFIG_NAME}")
 
   if OPTS[:name]
     GEB.start(OPTS[:name], conf)

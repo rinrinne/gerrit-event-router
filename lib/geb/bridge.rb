@@ -42,9 +42,11 @@ module GerritEventBridge
       begin
         uri = URI.parse(@gerrit.uri)
         uri.port = @gerrit.default_port unless uri.port
+        ssh_options = { :port => uri.port }
+        ssh_options[:keys] = @gerrit.ssh_keys if @gerrit.ssh_keys
 
         EM.run do
-          EM::Ssh.start(uri.host, uri.user, :port => uri.port) do |connection|
+          EM::Ssh.start(uri.host, uri.user, ssh_options) do |connection|
             connection.errback do |err|
               GEB.logger.error { "#{@gerrit.header} #{err} (#{err.class})" }
               EM.stop
