@@ -13,10 +13,11 @@ conf.gerrits.each do |gerrit|
   God.watch do |w|
     w.name = gerrit.name
     w.group = "geb-servers"
+    w.dir = GEB_ROOT
     w.log = "#{LOG_DIR}/#{gerrit.name}.log"
     w.env = { 'RBENV_ROOT' => "#{RBENV_ROOT}",
               'RBENV_VERSION' => "#{RBENV_VER}" }
-    w.start = "#{RBENV_ROOT}/bin/rbenv exec bundle exec #{GEB_ROOT}/geb-server -c #{GEB_ROOT}/geb-server.conf -n #{gerrit.name} -d"
+    w.start = "#{RBENV_ROOT}/bin/rbenv exec #{GEB_ROOT}/geb-server -c #{GEB_ROOT}/geb-server.conf -n #{gerrit.name} -d"
     w.keepalive
   end
 end
