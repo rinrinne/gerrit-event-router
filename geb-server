@@ -5,6 +5,7 @@ rootdir = File.dirname(File.expand_path(__FILE__))
 $:.unshift File.join(rootdir,"lib")
 
 require 'rubygems'
+require 'bundler/setup'
 require 'optparse'
 require 'eventmachine'
 require 'em-ssh'
