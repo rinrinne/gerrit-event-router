@@ -2,20 +2,21 @@
 $:.unshift File.join(File.dirname(File.expand_path(__FILE__)), "lib")
 require 'geb'
 
-root_dir  = "/home/user/git/gerrit-event-bridge"
-rbenv_dir = "/home/user/.rbenv"
-rbenv_ver = "1.9.3-p362"
-log_dir   = "/tmp/geb"
+GEB_ROOT   = "/home/user/git/gerrit-event-bridge"
+RBENV_ROOT = "/home/user/.rbenv"
+RBENV_VER  = "1.9.3-p362"
+LOG_DIR    = "/tmp/geb"
 
-conf = GEB.load_config("#{root_dir}/geb-server.conf")
+conf = GEB.load_config("#{GEB_ROOT}/geb-server.conf")
 
 conf.gerrits.each do |gerrit|
   God.watch do |w|
     w.name = gerrit.name
-    w.log = "#{ilog_dir}/#{gerrit.name}.log"
-    w.env = { 'RBENV_ROOT' => "#{rbenv_dir}",
-              'RBENV_VERSION' => "#{rbenv_ver}" }
-    w.start = "#{rbenv_root}/bin/rbenv exec bundle exec #{root_dir}/geb-server -c #{root_dir}/geb-server.conf -n #{gerrit.name} -d"
+    w.group = "geb-servers"
+    w.log = "#{LOG_DIR}/#{gerrit.name}.log"
+    w.env = { 'RBENV_ROOT' => "#{RBENV_ROOT}",
+              'RBENV_VERSION' => "#{RBENV_VER}" }
+    w.start = "#{RBENV_ROOT}/bin/rbenv exec bundle exec #{GEB_ROOT}/geb-server -c #{GEB_ROOT}/geb-server.conf -n #{gerrit.name} -d"
     w.keepalive
   end
 end
