@@ -1,0 +1,21 @@
+# -*- coding: utf-8 -*-
+$:.unshift File.join(File.dirname(File.expand_path(__FILE__)), "lib")
+require 'geb'
+
+root_dir  = "/home/user/git/gerrit-event-bridge"
+rbenv_dir = "/home/user/.rbenv"
+rbenv_ver = "1.9.3-p362"
+log_dir   = "/tmp/geb"
+
+conf = GEB.load_config("#{root_dir}/geb-server.conf")
+
+conf.gerrits.each do |gerrit|
+  God.watch do |w|
+    w.name = gerrit.name
+    w.log = "#{ilog_dir}/#{gerrit.name}.log"
+    w.env = { 'RBENV_ROOT' => "#{rbenv_dir}",
+              'RBENV_VERSION' => "#{rbenv_ver}" }
+    w.start = "#{rbenv_root}/bin/rbenv exec bundle exec #{root_dir}/geb-server -c #{root_dir}/geb-server.conf -n #{gerrit.name} -d"
+    w.keepalive
+  end
+end
