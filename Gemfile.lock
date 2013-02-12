@@ -1,3 +1,11 @@
+PATH
+  remote: .
+  specs:
+    gerouter (0.0.1)
+      amqp
+      em-ssh
+      eventmachine
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -13,14 +21,10 @@ GEM
       eventmachine
       net-ssh
     eventmachine (1.0.0)
-    god (0.13.1)
     net-ssh (2.6.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  amqp
-  em-ssh
-  eventmachine
-  god
+  gerouter!
