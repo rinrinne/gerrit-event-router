@@ -68,11 +68,25 @@ This application runs on user process in foreground. If you want to run as daemo
 Config
 ---------------------------
 
-Also sample of config is stored in [here][samples].
+Sample of config is also stored in [here][samples].
+
+* YAML format with object information
+* Gerrit and broker items
+* You can include multiple item
+* Broker in Gerrit has the broker name
+* Broker can consolidate events in multiple Gerrit
 
 
+Extended Gerrit event
+---------------------------
 
+Gerrit event which is sent to broker is extended in order to consolidate them in multiple Gerrit.
 
+```yaml
+version: 1
+host: gerrit hostname
+event: (original event)
+```
 
 License
 ===========================
