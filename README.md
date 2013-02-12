@@ -6,9 +6,7 @@ Description
 
 gerouter is a server application for routing gerrit events to message broker.
 
-First prototype was the below gist
-
-https://gist.github.com/4563261
+First prototype: https://gist.github.com/4563261
 
 License
 ===========================
