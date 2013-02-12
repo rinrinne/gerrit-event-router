@@ -1,9 +1,6 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
-rootdir = File.dirname(File.expand_path(__FILE__))
-$:.unshift File.join(rootdir,"lib")
-
 require 'rubygems'
 require 'bundler/setup'
 require 'optparse'
@@ -12,7 +9,7 @@ require 'em-ssh'
 require 'amqp'
 require 'ger'
 
-Version = '1.0'
+Version = GER::VERSION
 GER.logger(GER::LOG_NORMAL).progname = GER::NAME
 STDOUT.sync = true
 
