@@ -86,7 +86,7 @@ Gerrit event which is sent to broker is extended in order to consolidate them in
 {
 "version":"1",
 "host":"gerrit hostname",
-"event":{(original event)}
+"event":{...}  # original event
 }
 ```
 
