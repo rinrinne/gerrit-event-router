@@ -21,7 +21,7 @@ GEM
       eventmachine
       net-ssh
     eventmachine (1.0.0)
-    net-ssh (2.6.3)
+    net-ssh (2.6.5)
 
 PLATFORMS
   ruby
