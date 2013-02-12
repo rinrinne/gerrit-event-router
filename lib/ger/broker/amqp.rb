@@ -51,7 +51,7 @@ module GerritEventRouter
       def send(data, param)
         param[:timestamp] = Time.now.to_i
         @exchange.publish(data, @headers.merge(param)) do
-          GER.logger.info "#{HEADER} Published time: #{param[:timestamp]}"
+          GER.logger.info "#{HEADER} Published time: #{param[:timestamp]}, routing: #{param[:routing_key]||'All'}"
           GER.logger.debug "#{HEADER} Published content: #{data}"
         end
       end
