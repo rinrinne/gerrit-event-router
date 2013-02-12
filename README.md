@@ -61,9 +61,11 @@ $ bundle exec gerouter -c gerouter.conf
 
 This application runs on user process in foreground. If you want to run as daemon, recommend to use [God][god]. Samples are stored in [here][samples].
 
+Note that sample is configured to use [shared rbenv][sharedrbenv]
+
 [god]: http://godrb.com/ "God"
 [samples]: https://github.com/rinrinne/gerrit-event-router/tree/master/samples "samples"
-
+[sharedrbenv]: https://github.com/rinrinne/install-shared-rbenv "Install shared rbenv"
 
 Config
 ---------------------------
