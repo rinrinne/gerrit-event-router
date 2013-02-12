@@ -26,13 +26,20 @@ This application can achieve this purpose by a combination with message queue se
 Usage
 --------------------------
 
-Install gem
+Install gem:
 
 ```console
 $ gem install gerouter
 ```
 
-Command help
+Install from repository:
+
+``console
+$ rake build
+$ bundle install
+```
+
+Command help:
 
 ```console
 $ bundle exec gerouter --help
