@@ -18,7 +18,4 @@ vendor/bundle
 _yardoc
 doc/
 
-test.rb
-test.yaml
 wiki/
-*.test
