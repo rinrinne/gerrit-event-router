@@ -68,9 +68,7 @@ This application runs on user process in foreground. If you want to run as daemo
 Config
 ---------------------------
 
-<script src="https://gist.github.com/rinrinne/4563261.js"></script>
-
-First prototype: https://gist.github.com/4563261
+Also sample of config is stored in [here][samples].
 
 
 
