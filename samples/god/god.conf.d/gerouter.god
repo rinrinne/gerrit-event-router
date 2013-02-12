@@ -2,7 +2,7 @@
 require 'ger'
 
 RBENV_ROOT = "/home/user/.rbenv"
-RBENV_VER  = "1.9.3-p362"
+RBENV_VER  = "1.9.3-p385"
 CONFIG     = "/etc/gerouter/gerouter.conf"
 LOG_DIR    = "/ver/log/#{GER::NAME}"
 
