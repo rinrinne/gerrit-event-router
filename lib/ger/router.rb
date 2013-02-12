@@ -9,7 +9,7 @@ module GerritEventRouter
         @broker = config.brokers[@gerrit.broker]
         raise "Broker name is not found: #{@gerrit.broker}" unless @broker
 
-        GER.logger.info "Configured bridge: #{@gerrit.header}(#{@gerrit.name}) -> broker#{@broker.header}(#{@broker.name})"
+        GER.logger.info "Configured router: #{@gerrit.header}(#{@gerrit.name}) -> broker#{@broker.header}(#{@broker.name})"
         @configured = true
       rescue
         @configured = false

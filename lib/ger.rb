@@ -23,8 +23,8 @@ module GerritEventRouter
     end
 
     def start(name, config)
-      bridge = Router.new(name, config)
-      bridge.start
+      router = Router.new(name, config)
+      router.start
     end
   end
 end
