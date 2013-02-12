@@ -30,7 +30,7 @@ begin
 
   GER.logger.level = GER::LOG_DEBUG if OPTS[:debug]
 
-  conf = GER.load_config(OPTS[:config]||"#{rootdir}/#{GER::CONFIG_NAME}")
+  conf = GER.load_config(OPTS[:config]||"#{GER::CONFIG_NAME}")
 
   if OPTS[:name]
     GER.start(OPTS[:name], conf)
