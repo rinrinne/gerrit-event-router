@@ -34,7 +34,7 @@ $ gem install gerouter
 
 Install from repository:
 
-``console
+```console
 $ rake build
 $ bundle install
 ```
