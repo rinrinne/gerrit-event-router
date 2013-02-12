@@ -82,10 +82,12 @@ Extended Gerrit event
 
 Gerrit event which is sent to broker is extended in order to consolidate them in multiple Gerrit.
 
-```yaml
-version: 1
-host: gerrit hostname
-event: (original event)
+```json
+{
+"version":"1",
+"host":"gerrit hostname",
+"event":{(original event)}
+}
 ```
 
 License
