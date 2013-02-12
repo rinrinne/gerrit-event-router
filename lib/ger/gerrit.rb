@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-module GerritEventBridge
+module GerritEventRouter
   class Gerrit
     HEADER = '[gerrit]'
 
-    class Config < GerritEventBridge::Config::Base
+    class Config < GerritEventRouter::Config::Base
       DEFAULT_PORT = 29418
       COMMAND = 'gerrit stream-events'
 

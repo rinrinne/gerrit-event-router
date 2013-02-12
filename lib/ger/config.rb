@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-module GerritEventBridge
+module GerritEventRouter
   class Config
     class Array < ::Array
       def [](key)
@@ -33,9 +33,9 @@ module GerritEventBridge
     def load(path)
       open(path) do |stream|
         YAML.load_stream(stream, path) do |obj|
-          if obj.instance_of?(GEB::Gerrit::Config)
+          if obj.instance_of?(GER::Gerrit::Config)
             @gerrits << obj
-          elsif obj.kind_of?(GEB::Broker::Config::Base)
+          elsif obj.kind_of?(GER::Broker::Config::Base)
             @brokers << obj
           end
         end

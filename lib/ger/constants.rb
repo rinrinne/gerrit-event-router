@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-module GerritEventBridge
-  NAME = 'GEB'
-  CONFIG_NAME = 'geb-server.conf'
+module GerritEventRouter
+  NAME = 'GEROUTER'
+  CONFIG_NAME = 'gerouter.conf'
   LOG_NORMAL  = ::Logger::INFO
   LOG_DEBUG   = ::Logger::DEBUG
 

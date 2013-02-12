@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-module GerritEventBridge
+module GerritEventRouter
   module Broker
     class AMQP < Base
       HEADER = '[Broker::AMQP]'
 
-      class Config < GerritEventBridge::Broker::Config::Base
+      class Config < GerritEventRouter::Broker::Config::Base
         def initialize(name, uri, user, exchange)
           super(name, uri)
           @user = user
@@ -23,7 +23,7 @@ module GerritEventBridge
         @headers = {
           :content_type => 'application/json',
           :user_id => @broker.user,
-          :app_id => GEB::NAME
+          :app_id => GER::NAME
         }
         @connection = nil
         @exchange = nil
@@ -51,8 +51,8 @@ module GerritEventBridge
       def send(data, param)
         param[:timestamp] = Time.now.to_i
         @exchange.publish(data, @headers.merge(param)) do
-          GEB.logger.debug "#{HEADER} Published time: #{param[:timestamp]}"
-          GEB.logger.debug "#{HEADER} Published content: #{data}"
+          GER.logger.debug "#{HEADER} Published time: #{param[:timestamp]}"
+          GER.logger.debug "#{HEADER} Published content: #{data}"
         end
       end
 
@@ -78,25 +78,25 @@ module GerritEventBridge
       end
 
       def conn_failure(err)
-        GEB.logger.error "#{HEADER} TCP connection failed, as expcted."
+        GER.logger.error "#{HEADER} TCP connection failed, as expcted."
         EM.stop if EM.reactor_running?
       end
 
       def auth_failure(err)
-        GEB.logger.error "#{HEADER} Authentication failed, as expcted, caught #{afe.inspect}"
+        GER.logger.error "#{HEADER} Authentication failed, as expcted, caught #{afe.inspect}"
         EM.stop if EM.reactor_running?
       end
 
       def conn_loss(connection, settings)
         if connection.error? then
-          GEB.logger.warn "#{HEADER} Connection lost. reconnectiong..."
+          GER.logger.warn "#{HEADER} Connection lost. reconnectiong..."
           connection.reconnect(false, 1)
         end
       end
 
       def conn_intp(connection)
         if connection.error? then
-          GEB.logger.warn "#{HEADER} Connection interrupton. reconnectiong..."
+          GER.logger.warn "#{HEADER} Connection interrupton. reconnectiong..."
           connection.reconnect(false, 1)
         end
       end

@@ -10,10 +10,10 @@ require 'optparse'
 require 'eventmachine'
 require 'em-ssh'
 require 'amqp'
-require 'geb'
+require 'ger'
 
 Version = '1.0'
-GEB.logger(GEB::LOG_NORMAL).progname = GEB::NAME
+GER.logger(GER::LOG_NORMAL).progname = GER::NAME
 STDOUT.sync = true
 
 begin
@@ -31,18 +31,18 @@ begin
     opt.parse(ARGV)
   end
 
-  GEB.logger.level = GEB::LOG_DEBUG if OPTS[:debug]
+  GER.logger.level = GER::LOG_DEBUG if OPTS[:debug]
 
-  conf = GEB.load_config(OPTS[:config]||"#{rootdir}/#{GEB::CONFIG_NAME}")
+  conf = GER.load_config(OPTS[:config]||"#{rootdir}/#{GER::CONFIG_NAME}")
 
   if OPTS[:name]
-    GEB.start(OPTS[:name], conf)
+    GER.start(OPTS[:name], conf)
   else
     STDOUT.puts conf.names
   end
 
 rescue => e
-  GEB.logger.error("#{e.message} (#{e.class})")
-  GEB.logger.debug("TRACE -->\nT, #{e.backtrace.join("\nT, ")}")
+  GER.logger.error("#{e.message} (#{e.class})")
+  GER.logger.debug("TRACE -->\nT, #{e.backtrace.join("\nT, ")}")
   exit 1
 end

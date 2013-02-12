@@ -4,14 +4,14 @@ $:.unshift File.dirname(File.expand_path(__FILE__))
 require 'logger'
 require 'yaml'
 require 'uri'
-require 'geb/constants'
-require 'geb/config'
-require 'geb/bridge'
-require 'geb/gerrit'
-require 'geb/broker'
-require 'geb/broker/amqp'
+require 'ger/constants'
+require 'ger/config'
+require 'ger/router'
+require 'ger/gerrit'
+require 'ger/broker'
+require 'ger/broker/amqp'
 
-module GerritEventBridge
+module GerritEventRouter
   class << self
     attr_writer :logger
     def logger(level = ::Logger::INFO)
@@ -23,10 +23,10 @@ module GerritEventBridge
     end
 
     def start(name, config)
-      bridge = Bridge.new(name, config)
+      bridge = Router.new(name, config)
       bridge.start
     end
   end
 end
 
-GEB = GerritEventBridge
+GER = GerritEventRouter

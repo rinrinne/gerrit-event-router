@@ -1,4 +1,4 @@
-gerrit-event-bridge
+gerrit-event-router
 ===========================
 
 Sample code:

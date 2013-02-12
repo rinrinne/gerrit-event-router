@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-module GerritEventBridge
+module GerritEventRouter
   module Broker
     class Base
       HEADER = '[Broker::Base]'
@@ -17,7 +17,7 @@ module GerritEventBridge
     end
 
     module Config
-      class Base < GerritEventBridge::Config::Base
+      class Base < GerritEventRouter::Config::Base
         def initialize(name, uri)
           super(name, uri)
         end
@@ -26,8 +26,8 @@ module GerritEventBridge
 
     class << self
       def connect(broker, &block)
-        if broker.instance_of?(GEB::Broker::AMQP::Config) then
-          GEB::Broker::AMQP.new(broker).connect(&block)
+        if broker.instance_of?(GER::Broker::AMQP::Config) then
+          GER::Broker::AMQP.new(broker).connect(&block)
         end
       end
     end
