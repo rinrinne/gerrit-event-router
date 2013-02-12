@@ -91,11 +91,11 @@ Gerrit event which is sent to broker is encapsulated in order to consolidate the
 ```
 
 License
-===========================
+---------------------------
 
 MIT License
 
 Copyright
-===========================
+---------------------------
 
 Copyright (c) 2013 rinrinne a.k.a. rin_ne
