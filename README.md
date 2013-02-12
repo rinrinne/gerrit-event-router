@@ -77,16 +77,16 @@ Sample of config is also stored in [here][samples].
 * Broker can consolidate events in multiple Gerrit
 
 
-Extended Gerrit event
+Encapsulated Gerrit event
 ---------------------------
 
-Gerrit event which is sent to broker is extended in order to consolidate them in multiple Gerrit.
+Gerrit event which is sent to broker is encapsulated in order to consolidate them in multiple Gerrit.
 
 ```json
 {
 "version":"1",
 "host":"gerrit hostname",
-"event":{...}  # original event
+"event":{"ORIGINAL EVENT"} 
 }
 ```
 
