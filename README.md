@@ -28,13 +28,13 @@ Usage
 
 Install gem
 
-```
+```console
 $ gem install gerouter
 ```
 
 Command help
 
-```
+```console
 $ bundle exec gerouter --help
 Usage: gerouter [options]
     -d, --debug                      Debug mode
@@ -44,13 +44,13 @@ Usage: gerouter [options]
 
 You should specify -c and -n options.
 
-```
+```console
 $ bundle exec gerouter -c gerouter.conf -n foobar
 ```
 
 If -n is not specified, gerouter displays name list.
 
-```
+```console
 $ bundle exec gerouter -c gerouter.conf
 ---
 :gerrit:
