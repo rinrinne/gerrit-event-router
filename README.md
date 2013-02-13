@@ -10,15 +10,12 @@ Synopsis
 gerouter is a server application for routing [Gerrit][gerrit] events to message broker.
 Now only AMQP broker is supported (recommend [RabbitMQ][rabbitmq] as message queue server)
 
-[gerrit]: https://code.google.com/p/gerrit/ "Gerrit Code Review"
-[rabbitmq]: http://www.rabbitmq.com/ "RabbitMQ"
-
 Motivation
 ---------------------------
 
 Gerrit provides events via ssh stream. Client can receive them using ssh connection. But both of them has no dedicated queue. It means that client may miss many events if ssh is disconnected.
 
-Gerrit events are not required to be processed in real-time. So we can improve this by adding a dedicated and robust queue.
+Gerrit events are not required to be processed in real-time. So we can improve this by using asynchronous communication protocol.
 
 This application can achieve this purpose by a combination with message queue service.
 
@@ -70,10 +67,6 @@ This application has user process and runs in foreground. If you want to run as 
 
 Note that sample is configured to use [shared rbenv][sharedrbenv]
 
-[god]: http://godrb.com/ "God"
-[samples]: https://github.com/rinrinne/gerrit-event-router/tree/master/samples "samples"
-[sharedrbenv]: https://github.com/rinrinne/install-shared-rbenv "Install shared rbenv"
-
 Config
 ---------------------------
 
@@ -100,6 +93,27 @@ As below, gerouter stuffs Gerrit event with own object then send to broker.
 ```
 
 If you want to treat raw Gerrit event, you should set "raw" to `mode` in broker config.
+
+Notice
+---------------------------
+
+This application generates only exchange on message queue service. No any queues/bindings are generated. It should be subscriber's responsible.
+
+Material
+--------------------------
+
+* [Gerrit Code Review][gerrit]
+* [RabbitMQ][rabbitmq]
+* [Message queue][messagequeue]
+* [God][god]
+* [install-shared-rbenv][sharedrbenv]
+
+[gerrit]: https://code.google.com/p/gerrit/ "Gerrit Code Review"
+[rabbitmq]: http://www.rabbitmq.com/ "RabbitMQ"
+[god]: http://godrb.com/ "God"
+[samples]: https://github.com/rinrinne/gerrit-event-router/tree/master/samples "samples"
+[sharedrbenv]: https://github.com/rinrinne/install-shared-rbenv "Install shared rbenv"
+[messagequeue]: http://en.wikipedia.org/wiki/Message_queue "Wikipedia: Message queue"
 
 License
 ---------------------------
