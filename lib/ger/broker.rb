@@ -18,9 +18,12 @@ module GerritEventRouter
 
     module Config
       class Base < GerritEventRouter::Config::Base
-        def initialize(name, uri)
+        def initialize(name, uri, mode)
           super(name, uri)
+          @mode = mode || "normal"
         end
+
+        attr_reader :mode
       end
     end
 

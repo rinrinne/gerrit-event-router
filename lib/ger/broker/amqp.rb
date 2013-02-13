@@ -5,8 +5,8 @@ module GerritEventRouter
       HEADER = '[Broker::AMQP]'
 
       class Config < GerritEventRouter::Broker::Config::Base
-        def initialize(name, uri, user, exchange)
-          super(name, uri)
+        def initialize(name, uri, mode, user, exchange)
+          super(name, uri, mode)
           @user = user
           @exchange = exchange
         end

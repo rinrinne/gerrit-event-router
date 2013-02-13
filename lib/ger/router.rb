@@ -61,7 +61,11 @@ module GerritEventRouter
 
                 session.exec(@gerrit.command) do |channel, stream, data|
                   channel.on_data do |ch, data|
-                    str = %Q({"version":"#{GER::SCHEMA_VERSION}","host":"#{uri.host}","event":#{data.strip}})
+                    if @broker.mode == "raw" then
+                      str = %Q(#{data.strip})
+                    else
+                      str = %Q({"version":"#{GER::SCHEMA_VERSION}","host":"#{uri.host}","event":#{data.strip}})
+                    end
                     broker.send(str, :routing_key => @gerrit.routing_key)
                   end
                 end
