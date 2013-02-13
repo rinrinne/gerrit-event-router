@@ -97,7 +97,7 @@ If you want to treat raw Gerrit event, you should set "raw" to `mode` in broker 
 Notice
 ---------------------------
 
-This application generates only exchange on message queue service. No any queues/bindings are generated. It should be subscriber's responsible.
+This application generates only exchange on message queue service. No any queues/bindings are generated. It should be consumer's responsible.
 
 Material
 --------------------------
