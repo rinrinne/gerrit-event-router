@@ -12,7 +12,7 @@ GEM
     amq-client (0.9.11)
       amq-protocol (>= 1.0.1)
       eventmachine
-    amq-protocol (1.1.0)
+    amq-protocol (1.2.0)
     amqp (0.9.8)
       amq-client (~> 0.9.5)
       amq-protocol (>= 0.9.4)
