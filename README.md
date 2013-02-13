@@ -58,7 +58,7 @@ $ bundle exec gerouter -c gerouter.conf -n foobar
 If -n is not specified, gerouter displays name list.
 
 ```console
-$ bundle exec gerouter -c gerouter.conf
+$ bundle exec gerouter -c gerouer.conf
 ---
 :gerrit:
 - foobar
@@ -66,7 +66,7 @@ $ bundle exec gerouter -c gerouter.conf
 - foo
 ```
 
-This application runs on user process in foreground. If you want to run as daemon, recommend to use [God][god]. Samples are stored in [here][samples].
+This application has user process and runs in foreground. If you want to run as daemon, recommend to use [God][god]. Samples are stored in [here][samples].
 
 Note that sample is configured to use [shared rbenv][sharedrbenv]
 
@@ -80,16 +80,16 @@ Config
 Sample of config is also stored in [here][samples].
 
 * YAML format with object information
-* Gerrit and broker items
-* You can include multiple item
-* Broker in Gerrit has the broker name
-* Broker can consolidate events in multiple Gerrit
+* gerrit and broker items
+* You can add any number of them
+* `broker` in gerrit has the broker name
+* gerrits can share one broker 
 
 
-Encapsulated Gerrit event
+Stuffed Gerrit event
 ---------------------------
 
-Gerrit event which is sent to broker is encapsulated in order to consolidate them in multiple Gerrit.
+As below, gerouter stuffs Gerrit event with own object then send to broker.
 
 ```json
 {
