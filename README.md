@@ -99,6 +99,8 @@ As below, gerouter stuffs Gerrit event with own object then send to broker.
 }
 ```
 
+If you want to treat raw Gerrit event, you should set "war"` to `mode` in broker config.
+
 License
 ---------------------------
 
