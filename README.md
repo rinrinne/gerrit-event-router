@@ -84,7 +84,6 @@ routing_key: gerrit.event.localhost
 name: amqp-broker
 uri: amqp://localhost   # amqp / amqps
 mode:                   # raw / normal (same as empty)
-user: 
 exchange:
   type: topic           # direct / fanout /topic
   name: gerrit.event

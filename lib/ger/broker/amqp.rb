@@ -5,9 +5,8 @@ module GerritEventRouter
       HEADER = '[Broker::AMQP]'
 
       class Config < GerritEventRouter::Broker::Config::Base
-        def initialize(name, uri, mode, user, exchange)
+        def initialize(name, uri, mode, exchange)
           super(name, uri, mode)
-          @user = user
           @exchange = exchange
         end
 
@@ -22,9 +21,10 @@ module GerritEventRouter
         super(broker)
         @headers = {
           :content_type => 'application/json',
-          :user_id => @broker.user,
-          :app_id => GER::NAME
+          :app_id => GER::NAME.downcase
         }
+        uri = URI.parse(@broker.uri)
+        @headers[:user_id] = uri.user if uri.user
         @connection = nil
         @exchange = nil
       end
