@@ -70,7 +70,27 @@ Note that sample is configured to use [shared rbenv][sharedrbenv]
 Config
 ---------------------------
 
-Sample of config is also stored in [here][samples].
+```yaml
+--- !ruby/object:GER::Gerrit::Config
+name: gerrit
+uri: ssh://user@localhost:29418
+ssh_keys: 
+  - /home/user/.ssh/id_dsa
+  - /home/user/.ssh/id_rsa
+broker: amqp-broker
+routing_key: gerrit.event.localhost
+
+--- !ruby/object:GER::Broker::AMQP::Config
+name: amqp-broker
+uri: amqp://localhost   # amqp / amqps
+mode:                   # raw / normal (same as empty)
+user: 
+exchange:
+  type: topic           # direct / fanout /topic
+  name: gerrit.event
+```
+
+The above is also stored in [here][samples].
 
 * YAML format with object information
 * gerrit and broker items
