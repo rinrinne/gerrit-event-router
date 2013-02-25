@@ -108,6 +108,7 @@ As below, gerouter stuffs Gerrit event with own object then send to broker.
 "provider":"gerouter",
 "version":"1",
 "host":"gerrit hostname",
+"port":"gerrit port",
 "event":{"ORIGINAL EVENT"} 
 }
 ```
