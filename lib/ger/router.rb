@@ -64,7 +64,7 @@ module GerritEventRouter
                     if @broker.mode == "raw" then
                       str = %Q(#{data.strip})
                     else
-                      str = %Q({"provider":"#{GER::NAME.downcase}","version":"#{GER::SCHEMA_VERSION}","host":"#{uri.host}","port":"#{uri.port}","event":#{data.strip}})
+                      str = %Q({"origin":"#{GER::ORIGIN}","provider":"#{GER::NAME.downcase}","version":"#{GER::SCHEMA_VERSION}","host":"#{uri.host}","port":"#{uri.port}","event":#{data.strip}})
                     end
                     broker.send(str, :routing_key => @gerrit.routing_key)
                   end

@@ -105,6 +105,7 @@ As below, gerouter stuffs Gerrit event with own object then send to broker.
 
 ```json
 {
+"origin":"gerrit",
 "provider":"gerouter",
 "version":"1",
 "host":"gerrit hostname",
