@@ -6,6 +6,7 @@ module GerritEventRouter
     class Config < GerritEventRouter::Config::Base
       DEFAULT_PORT = 29418
       COMMAND = 'gerrit stream-events'
+      VERSION = 'gerrit version'
 
       def initialize(name, uri, ssh_keys, broker, routing_key)
         super(name, uri)
@@ -24,6 +25,10 @@ module GerritEventRouter
 
       def command
         COMMAND
+      end
+
+      def version
+        VERSION
       end
 
       def header

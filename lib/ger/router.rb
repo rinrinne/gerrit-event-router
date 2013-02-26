@@ -61,6 +61,14 @@ module GerritEventRouter
                 GER.logger.info("#{@broker.header} connection established.")
                 GER.logger.debug("#{@broker.header} channel id = #{broker.channel.id}")
 
+                session.exec(@gerrit.version) do |channel, stream, data|
+                  if data then
+                    version = data.strip.delete("gerrit version")
+                    misc["gerrit-version"] = version
+                    GER.logger.info("gerrit version: #{version}")
+                  end
+                end
+
                 session.exec(@gerrit.command) do |channel, stream, data|
                   channel.on_data do |ch, data|
                     if @broker.mode == "raw" then
