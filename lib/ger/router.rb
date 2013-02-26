@@ -45,7 +45,7 @@ module GerritEventRouter
         ssh_options = { :port => uri.port }
         ssh_options[:keys] = @gerrit.ssh_keys if @gerrit.ssh_keys
 
-        misc = {"host" => uri.host, "port" => uri.port.to_s}
+        misc = {"ssh-host" => uri.host, "ssh-port" => uri.port.to_s}
 
         EM.run do
           EM::Ssh.start(uri.host, uri.user, ssh_options) do |connection|

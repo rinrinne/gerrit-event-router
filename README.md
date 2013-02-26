@@ -106,8 +106,8 @@ As below, gerouter adds `misc` attribute into Gerrit event then send to broker.
 ```json
 {
   "misc": {
-    "host":"gerrit host",
-    "port":"gerrit port"
+    "ssh-host":"gerrit host",
+    "ssh-port":"gerrit port"
   }
 }
 ```
