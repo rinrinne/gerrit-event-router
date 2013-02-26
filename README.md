@@ -98,19 +98,17 @@ The above is also stored in [here][samples].
 * gerrits can share one broker 
 
 
-Stuffed Gerrit event
+Additional attribute in Gerrit event
 ---------------------------
 
-As below, gerouter stuffs Gerrit event with own object then send to broker.
+As below, gerouter adds `misc` attribute into Gerrit event then send to broker.
 
 ```json
 {
-"origin":"gerrit",
-"provider":"gerouter",
-"version":"1",
-"host":"gerrit hostname",
-"port":"gerrit port",
-"event":{"ORIGINAL EVENT"} 
+  "misc": {
+    "host":"gerrit host",
+    "port":"gerrit port"
+  }
 }
 ```
 

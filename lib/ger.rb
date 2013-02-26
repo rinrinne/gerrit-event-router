@@ -4,6 +4,7 @@ $:.unshift File.dirname(File.expand_path(__FILE__))
 require 'logger'
 require 'yaml'
 require 'uri'
+require 'json'
 require 'ger/constants'
 require 'ger/config'
 require 'ger/router'

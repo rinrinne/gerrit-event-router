@@ -45,6 +45,8 @@ module GerritEventRouter
         ssh_options = { :port => uri.port }
         ssh_options[:keys] = @gerrit.ssh_keys if @gerrit.ssh_keys
 
+        misc = {"host" => uri.host, "port" => uri.port.to_s}
+
         EM.run do
           EM::Ssh.start(uri.host, uri.user, ssh_options) do |connection|
             connection.errback do |err|
@@ -64,7 +66,9 @@ module GerritEventRouter
                     if @broker.mode == "raw" then
                       str = %Q(#{data.strip})
                     else
-                      str = %Q({"origin":"#{GER::ORIGIN}","provider":"#{GER::NAME.downcase}","version":"#{GER::SCHEMA_VERSION}","host":"#{uri.host}","port":"#{uri.port}","event":#{data.strip}})
+                      json = JSON.parse(data.strip)
+                      json["misc"] = misc
+                      str = JSON.generate(json)
                     end
                     broker.send(str, :routing_key => @gerrit.routing_key)
                   end
