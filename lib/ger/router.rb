@@ -45,7 +45,7 @@ module GerritEventRouter
         ssh_options = { :port => uri.port }
         ssh_options[:keys] = @gerrit.ssh_keys if @gerrit.ssh_keys
 
-        misc = {"ssh-host" => uri.host, "ssh-port" => uri.port.to_s}
+        provider = {"name" => @gerrit.name, "host" => uri.host, "port" => uri.port.to_s}
 
         EM.run do
           EM::Ssh.start(uri.host, uri.user, ssh_options) do |connection|
@@ -64,8 +64,8 @@ module GerritEventRouter
                 session.exec(@gerrit.version) do |channel, stream, data|
                   if data then
                     version = data.strip.delete("gerrit version")
-                    misc["gerrit-version"] = version
-                    GER.logger.info("gerrit version: #{version}")
+                    provider["version"] = version
+                    GER.logger.info("version: #{version}")
                   end
                 end
 
@@ -75,7 +75,7 @@ module GerritEventRouter
                       str = %Q(#{data.strip})
                     else
                       json = JSON.parse(data.strip)
-                      json["misc"] = misc
+                      json["provider"] = provider
                       str = JSON.generate(json)
                     end
                     broker.send(str, :routing_key => @gerrit.routing_key)
