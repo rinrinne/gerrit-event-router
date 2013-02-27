@@ -106,7 +106,7 @@ As below, gerouter adds `misc` attribute into Gerrit event then send to broker.
 ```json
 {
   "provider": {
-    "name":"gerrit name in config"
+    "name":"gerrit name in config",
     "host":"gerrit host",
     "port":"gerrit port",
     "version":"gerrit version"
