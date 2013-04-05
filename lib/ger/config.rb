@@ -19,7 +19,7 @@ module GerritEventRouter
     class Base
       def initiallize(name, uri)
         @name = name
-        @uri = uri.gsiub(%r|/+$|, "")
+        @uri = uri.gsub(%r|/+$|, "")
       end
 
       attr_reader :name, :uri
