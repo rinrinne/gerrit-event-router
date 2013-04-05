@@ -1,6 +1,9 @@
 gerouter: Gerrit Event Router
 ===========================
 
+[![Gem Version](https://badge.fury.io/rb/gerouter.png)](http://badge.fury.io/rb/gerouter)
+[![Dependency Status](https://gemnasium.com/rinrinne/gerrit-event-router.png)](https://gemnasium.com/rinrinne/gerrit-event-router)
+
 * Author: rinrinne
 * Repository: https://github.com/rinrinne/gerrit-event-router
 
