@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 module GerritEventRouter
   class Router
-    def initialize(name, config)
+    def initialize(name, appid, config)
       @name = name
+      @appid = appid
       begin
         @gerrit = config.gerrits[name]
         raise "Gerrit name is not found: #{name}" unless @gerrit
@@ -83,7 +84,7 @@ module GerritEventRouter
                       json["provider"] = provider
                       str = JSON.generate(json)
                     end
-                    broker.send(str, :routing_key => @gerrit.routing_key)
+                    broker.send(str, :app_id => @appid, :routing_key => @gerrit.routing_key)
                   end
                 end
               end

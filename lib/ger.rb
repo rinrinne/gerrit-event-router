@@ -23,8 +23,8 @@ module GerritEventRouter
       Config.new.load(path)
     end
 
-    def start(name, config)
-      router = Router.new(name, config)
+    def start(name, appid, config)
+      router = Router.new(name, appid, config)
       router.start
     end
   end

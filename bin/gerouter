@@ -25,6 +25,9 @@ begin
     opt.on('-n NAME', '--name', 'Name of gerrit') do |v|
       OPTS[:name] = v
     end
+    opt.on('-i APPID', '--appid', "Application ID (default: #{GER::NAME.downcase})") do |v|
+      OPTS[:app_id] = v
+    end
     opt.parse(ARGV)
   end
 
@@ -33,7 +36,7 @@ begin
   conf = GER.load_config(OPTS[:config]||"#{GER::CONFIG_NAME}")
 
   if OPTS[:name]
-    GER.start(OPTS[:name], conf)
+    GER.start(OPTS[:name], OPTS[:app_id], conf)
   else
     STDOUT.puts conf.names
   end

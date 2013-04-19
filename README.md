@@ -47,6 +47,7 @@ Usage: gerouter [options]
     -d, --debug                      Debug mode
     -c, --config CONFIGFILE          Path to config file
     -n, --name NAME                  Name of gerrit
+    -i, --appid APPID                Application ID (default: gerouter)
 ```
 
 You should specify -c and -n options.
@@ -100,11 +101,22 @@ The above is also stored in [here][samples].
 * `broker` in gerrit has the broker name
 * gerrits can share one broker 
 
+Additional properties
+---------------------------
+
+gerouter adds some properties into each messages.
+
+```yaml
+content_type: application/json
+app_id: gerouter
+```
+
+You can change app_id to your own id using `-i` option.
 
 Additional attribute in Gerrit event
 ---------------------------
 
-As below, gerouter adds `misc` attribute into Gerrit event then send to broker.
+As below, gerouter adds `provider` attribute into Gerrit event then send to broker.
 
 ```json
 {
