@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gerouter (0.0.6)
+    gerouter (0.0.8)
       amqp
       em-ssh
       eventmachine
