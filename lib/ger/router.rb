@@ -22,17 +22,23 @@ module GerritEventRouter
       raise "Router still not be configured" unless @configured
 
       Signal.trap(:INT) do
-        GER.logger.info "Receive signal: INT. terminating."
+        Thread.new do
+          GER.logger.info "Receive signal: INT. terminating."
+        end
         EM.stop
       end
 
       Signal.trap(:TERM) do
-        GER.logger.info "Receive signal: TERM. terminating."
+        Thread.new do
+          GER.logger.info "Receive signal: TERM. terminating."
+        end
         EM.stop
       end
 
       Signal.trap(:USR2) do
-        GER.logger.debug "Receive signal: USR2"
+        Thread.new do
+          GER.logger.debug "Receive signal: USR2"
+        end
         if GER.logger.level == GER::LOG_NORMAL then
           GER.logger.level = GER::LOG_DEBUG
         else
