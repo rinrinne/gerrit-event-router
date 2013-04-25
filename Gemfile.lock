@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gerouter (0.0.8)
+    gerouter (0.0.9)
       amqp
       em-ssh
       eventmachine
@@ -9,7 +9,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    amq-client (1.0.0)
+    amq-client (1.0.1)
       amq-protocol (>= 1.2.0)
       eventmachine
     amq-protocol (1.3.0)
@@ -17,7 +17,7 @@ GEM
       amq-client (~> 1.0.0)
       amq-protocol (>= 1.3.0)
       eventmachine
-    em-ssh (0.5.0)
+    em-ssh (0.5.1)
       eventmachine
       net-ssh
     eventmachine (1.0.3)
