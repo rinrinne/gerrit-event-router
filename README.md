@@ -78,6 +78,7 @@ Config
 --- !ruby/object:GER::Gerrit::Config
 name: gerrit
 uri: ssh://user@localhost:29418
+weburl: http://localhost/       # Frontend URL for Gerrit WebUI
 ssh_keys: 
   - /home/user/.ssh/id_dsa
   - /home/user/.ssh/id_rsa
@@ -125,6 +126,7 @@ As below, gerouter adds `provider` attribute into Gerrit event then send to brok
     "host":"<gerrit host>",
     "port":"<gerrit port>",
     "proto":"ssh",
+    "url":"i<gerrit frontend url>",
     "version":"<gerrit version>"
   }
 }

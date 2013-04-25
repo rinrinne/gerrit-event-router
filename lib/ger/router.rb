@@ -56,7 +56,8 @@ module GerritEventRouter
           "name" => @gerrit.name,
           "host" => uri.host,
           "port" => uri.port.to_s,
-          "proto" => "ssh"
+          "proto" => "ssh",
+          "url" => @gerrit.weburl
         }
 
         EM.run do

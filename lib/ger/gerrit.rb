@@ -8,13 +8,14 @@ module GerritEventRouter
       COMMAND = 'gerrit stream-events'
       VERSION = 'gerrit version'
 
-      def initialize(name, uri, ssh_keys, broker, routing_key)
+      def initialize(name, uri, weburl, ssh_keys, broker, routing_key)
         super(name, uri)
         if ssh_keys.kind_of? Array then
           @ssh_keys = ssh_keys
         elsif ssh_keys.kind_of? String then
           @ssh_keys= [ ssh_keys ]
         end
+        @weburl = weburl
         @broker = broker
         @routing_key = routing_key
       end
@@ -35,7 +36,7 @@ module GerritEventRouter
         Gerrit::HEADER
       end
 
-      attr_reader :ssh_keys, :broker, :routing_key
+      attr_reader :weburl, :ssh_keys, :broker, :routing_key
     end
 
     def initialize(gerrit)
