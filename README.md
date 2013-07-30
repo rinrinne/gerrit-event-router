@@ -127,7 +127,8 @@ As below, gerouter adds `provider` attribute into Gerrit event then send to brok
     "port":"<gerrit port>",
     "proto":"ssh",
     "url":"<gerrit frontend url>",
-    "version":"<gerrit version>"
+    "version":"<gerrit version>",
+    "event_id":"<SHA256 message digest (generated from origin event)>"
   }
 }
 ```

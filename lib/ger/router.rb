@@ -88,6 +88,7 @@ module GerritEventRouter
                       str = %Q(#{data.strip})
                     else
                       json = JSON.parse(data.strip)
+                      provider["event_id"] = Digest::SHA256.hexdigest(data.strip)
                       json["provider"] = provider
                       str = JSON.generate(json)
                     end
