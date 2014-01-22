@@ -18,6 +18,18 @@ module GerritEventRouter
       end
     end
 
+    def header(provider)
+        headers = {
+          "gerrit-name" => provider["name"],
+          "gerrit-host" => provider["host"],
+          "gerrit-scheme" => provider["scheme"],
+          "gerrit-port" => provider["port"],
+          "gerrit-front-url" => provider["url"],
+          "gerrit-version" => provider["version"]
+        }
+        return headers
+    end
+
     def start
       raise "Router still not be configured" unless @configured
 
@@ -56,7 +68,7 @@ module GerritEventRouter
           "name" => @gerrit.name,
           "host" => uri.host,
           "port" => uri.port.to_s,
-          "proto" => "ssh",
+          "scheme" => "ssh",
           "url" => @gerrit.weburl
         }
 
@@ -92,7 +104,7 @@ module GerritEventRouter
                       json["provider"] = provider
                       str = JSON.generate(json)
                     end
-                    broker.send(str, :app_id => @appid, :routing_key => @gerrit.routing_key)
+                    broker.send(str, :app_id => @appid, :routing_key => @gerrit.routing_key, :headers => header(provider))
                   end
                 end
               end
