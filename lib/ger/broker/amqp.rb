@@ -21,7 +21,8 @@ module GerritEventRouter
         super(broker)
         @headers = {
           :content_type => 'application/json',
-          :app_id => GER::NAME.downcase
+          :app_id => GER::NAME.downcase,
+          :persistent => true
         }
         uri = URI.parse(@broker.uri)
         @headers[:user_id] = uri.user if uri.user
@@ -66,7 +67,7 @@ module GerritEventRouter
 
       def generate_channel(connection = nil)
         conn = connection || @connection
-        channel = ::AMQP::Channel.new(conn, ::AMQP::Channel.next_channel_id)
+        channel = ::AMQP::Channel.new(conn)
         channel.auto_recovery = true
         channel.on_error do |ch, channel_close|
           raise channel_close.reply_text
@@ -74,7 +75,9 @@ module GerritEventRouter
 
         @exchange = ::AMQP::Exchange.new(channel,
                                          @broker.exchange['type'].to_sym,
-                                         @broker.exchange['name'])
+                                         @broker.exchange['name'],
+                                         :durable => true,
+                                         :auto_delete => false)
       end
 
       def conn_failure(err)
