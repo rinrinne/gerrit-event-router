@@ -114,7 +114,7 @@ app_id: gerouter
 
 You can change app_id to your own id using `-i` option.
 
-And, `headers`property is added as below.
+And the below sub properties are added to `headers` property.
 
 ```yaml
 gerrit-name: <gerrit name in config>
