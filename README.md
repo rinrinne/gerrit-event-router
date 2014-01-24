@@ -117,17 +117,13 @@ You can change app_id to your own id using `-i` option.
 And, `headers`property is added as below.
 
 ```json
-{
-  "headers": {
-    "gerrit-name":"<gerrit name in config>",
-    "gerrit-host":"<gerrit host>",
-    "gerrit-port":"<gerrit port>",
-    "gerrit-scheme":"ssh",
-    "gerrit-front-url":"<gerrit frontend url>",
-    "gerrit-version":"<gerrit version>",
-    "event_id":"<SHA256 message digest (generated from origin event)>"
-  }
-}
+gerrit-name : <gerrit name in config>
+gerrit-host : <gerrit host>
+gerrit-port : <gerrit port>
+gerrit-scheme : ssh
+gerrit-front-url : <gerrit frontend url>
+gerrit-version : <gerrit version>
+event_id : <SHA256 message digest (generated from origin event)>
 ```
 
 Additional attribute in Gerrit event
