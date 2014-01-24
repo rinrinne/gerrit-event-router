@@ -116,7 +116,7 @@ You can change app_id to your own id using `-i` option.
 
 And, `headers`property is added as below.
 
-```json
+```yaml
 gerrit-name : <gerrit name in config>
 gerrit-host : <gerrit host>
 gerrit-port : <gerrit port>
